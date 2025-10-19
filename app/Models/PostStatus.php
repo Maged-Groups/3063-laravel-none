@@ -4,14 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Post extends Model
+class PostStatus extends Model
 {
-    /** @use HasFactory<\Database\Factories\PostFactory> */
+    /** @use HasFactory<\Database\Factories\PostStatusFactory> */
     use HasFactory, SoftDeletes;
 
     /**
@@ -27,10 +25,8 @@ class Post extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'title',
-        'body',
+        'type',
         'user_id',
-        'post_status_id',
     ];
 
     /**
@@ -43,23 +39,8 @@ class Post extends Model
     ];
 
     // Relationships
-    public function comments(): HasMany
+    public function posts(): HasMany
     {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function reactions(): MorphMany
-    {
-        return $this->morphMany(Reaction::class, 'reactable');
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
-    }
-
-    public function post_status(): BelongsTo
-    {
-        return $this->belongsTo(PostStatus::class);
+        return $this->hasMany(Post::class);
     }
 }

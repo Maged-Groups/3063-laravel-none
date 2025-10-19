@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Post extends Model
+class Comment extends Model
 {
-    /** @use HasFactory<\Database\Factories\PostFactory> */
+    /** @use HasFactory<\Database\Factories\CommentFactory> */
     use HasFactory, SoftDeletes;
 
     /**
@@ -19,18 +19,17 @@ class Post extends Model
      *
      * @var array<int, string>
      */
-    protected $guarded = [];
 
+    protected $guarded = [];
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
     protected $fillable = [
-        'title',
-        'body',
+        'comment',
+        'post_id',
         'user_id',
-        'post_status_id',
     ];
 
     /**
@@ -43,14 +42,9 @@ class Post extends Model
     ];
 
     // Relationships
-    public function comments(): HasMany
+    public function post(): BelongsTo
     {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function reactions(): MorphMany
-    {
-        return $this->morphMany(Reaction::class, 'reactable');
+        return $this->belongsTo(Post::class);
     }
 
     public function user(): BelongsTo
@@ -58,8 +52,12 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function post_status(): BelongsTo
+    public function reactions(): MorphMany
     {
-        return $this->belongsTo(PostStatus::class);
+        return $this->morphMany(Reaction::class, 'reactable');
+    }
+    public function replies(): HasMany
+    {
+        return $this->hasMany(Reply::class);
     }
 }

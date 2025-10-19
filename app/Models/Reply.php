@@ -5,14 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
-use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Post extends Model
+class Reply extends Model
 {
-    /** @use HasFactory<\Database\Factories\PostFactory> */
-    use HasFactory, SoftDeletes;
+    /** @use HasFactory<\Database\Factories\ReplyFactory> */
+    use HasFactory;
 
     /**
      * The attributes that aren't mass assignable.
@@ -27,10 +25,9 @@ class Post extends Model
      * @var list<string>
      */
     protected $fillable = [
-        'title',
-        'body',
+        'reply',
+        'comment_id',
         'user_id',
-        'post_status_id',
     ];
 
     /**
@@ -43,14 +40,9 @@ class Post extends Model
     ];
 
     // Relationships
-    public function comments(): HasMany
+    public function comment(): BelongsTo
     {
-        return $this->hasMany(Comment::class);
-    }
-
-    public function reactions(): MorphMany
-    {
-        return $this->morphMany(Reaction::class, 'reactable');
+        return $this->belongsTo(Comment::class);
     }
 
     public function user(): BelongsTo
@@ -58,8 +50,8 @@ class Post extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function post_status(): BelongsTo
+    public function reactions(): MorphMany
     {
-        return $this->belongsTo(PostStatus::class);
+        return $this->morphMany(Reaction::class, 'reactable');
     }
 }

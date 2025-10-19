@@ -11,7 +11,7 @@
 
 <body class="p-5">
 
-    @include('components.top-navbar')
+    @include('structure.top-navbar')
 
     {{-- Pages Content --}}
     @yield('content')
