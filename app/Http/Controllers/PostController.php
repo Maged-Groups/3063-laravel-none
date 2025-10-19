@@ -16,11 +16,10 @@ class PostController extends Controller
     public function index()
     {
 
-        $posts = Post::with('user')->limit(3)->get();
+        // $posts = Post::with('user')->withCount(['comments', 'reactions'])->limit(30)->get();
+        $posts = Post::with('user')->withCount(['comments', 'reactions'])->paginate(10);
 
-        $json_posts = PostResource::collection($posts);
-
-        return $json_posts;
+        return view('posts.index', compact('posts'));
 
     }
     /**
